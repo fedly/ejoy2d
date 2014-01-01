@@ -173,3 +173,22 @@ main(int argc, char *argv[]) {
 
 	return 0;
 }
+
+#if defined(_MSC_VER)
+
+#include <stdio.h>
+
+int __stdcall
+WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/, LPSTR /*lpCmdLine*/, int /*nCmdShow*/)
+{
+#if defined(_DEBUG)
+	FILE* new_file;
+	AllocConsole(); 
+	freopen_s(&new_file, "CONIN$",  "r", stdin);
+	freopen_s(&new_file, "CONOUT$", "w", stdout);
+	freopen_s(&new_file, "CONOUT$", "w", stderr);
+#endif
+	return main(__argc, __argv);
+}
+
+#endif

@@ -10,6 +10,10 @@
 #include <string.h>
 #include <stdio.h>
 
+#if defined(_MSC_VER)
+#include <dynarray.h>
+#endif
+
 #define TEX_HEIGHT 1024
 #define TEX_WIDTH 1024
 
@@ -82,7 +86,11 @@ gen_char(int unicode, const char * utf8, int size) {
 		return NULL;
 	}
 	int buffer_sz = rect->w * rect->h;
+#if !defined(_MSC_VER)
 	uint8_t buffer[buffer_sz];
+#else
+	msvc::dynarray<uint8_t> buffer(buffer_sz);
+#endif
 	memset(buffer,0,buffer_sz);
 	font_glyph(utf8, unicode, buffer, &ctx);
 	font_release(&ctx);

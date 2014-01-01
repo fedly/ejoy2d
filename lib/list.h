@@ -240,5 +240,8 @@ static inline void list_splice_init(struct list_head *list,
 	     &pos->member != (head); 					\
 	     pos = n, n = list_entry(n->member.next, typeof(*n), member))
 
+#if defined(_MSC_VER)
+#include <typeof.h>
+#endif
 
 #endif

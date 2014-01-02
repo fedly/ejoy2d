@@ -15,7 +15,7 @@ if defined VS120COMNTOOLS (
 if {%1}=={} (
 	set configuration="Release"
 ) else (
-	set configuration={%1}
+	set configuration=%1
 )
 
 msbuild "%~dp0/build/ejoy2d.sln" /m /v:m /t:rebuild /clp:ShowEventId /p:Configuration="%configuration%",Platform="Win32"

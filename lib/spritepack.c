@@ -238,6 +238,14 @@ import_label(struct import_stream *is) {
 }
 
 static void
+import_pannel(struct import_stream *is) {
+	struct pack_pannel *pp = (struct pack_pannel *)ialloc(is->alloc, sizeof(struct pack_pannel));
+	pp->width = import_int32(is);
+	pp->height = import_int32(is);
+	pp->scissor = import_byte(is);
+}
+
+static void
 import_sprite(struct import_stream *is) {
 	int id = import_word(is);
 	if (id <0 || id >= is->pack->n) {
@@ -263,6 +271,9 @@ import_sprite(struct import_stream *is) {
 	case TYPE_LABEL:
 		import_label(is);
 		break;
+	case TYPE_PANNEL:
+		import_pannel(is);
+		break;
 	default:
 		luaL_error(is->alloc->L, "Invalid stream : Unknown type %d, id=%d", type, id);
 		break;
@@ -279,8 +290,8 @@ import_sprite(struct import_stream *is) {
  */
 static int
 limport(lua_State *L) {
-	int max_id = luaL_checkinteger(L, 2); 
-	int size = luaL_checkinteger(L, 3);
+	int max_id = (int)luaL_checkinteger(L, 2); 
+	int size = (int)luaL_checkinteger(L, 3);
 	int tex;
 	int tt = lua_type(L,1);
 	if (tt == LUA_TNUMBER) {
@@ -310,11 +321,11 @@ limport(lua_State *L) {
 		int i;
 		for (i=0; i<tex; i++) {
 			lua_rawgeti(L,1,i+1);
-			pack->tex[i] = luaL_checkinteger(L, -1);
+			pack->tex[i] = (int)luaL_checkinteger(L, -1);
 			lua_pop(L,1);
 		}
 	} else {
-		pack->tex[0] = lua_tointeger(L,1);
+		pack->tex[0] = (int)lua_tointeger(L,1);
 	}
 
 	struct import_stream is;
@@ -332,7 +343,7 @@ limport(lua_State *L) {
 
 static int
 lpackbyte(lua_State *L) {
-	int n = luaL_checkinteger(L, 1);
+	int n = (int)luaL_checkinteger(L, 1);
 	if (n < 0 || n > 255) {
 		return luaL_error(L, "pack byte %d", n);
 	}
@@ -343,7 +354,7 @@ lpackbyte(lua_State *L) {
 
 static int
 lpackword(lua_State *L) {
-	int n = luaL_checkinteger(L, 1);
+	int n = (int)luaL_checkinteger(L, 1);
 	if (n < 0 || n > 0xffff) {
 		return luaL_error(L, "pack word %d", n);
 	}
@@ -357,7 +368,7 @@ lpackword(lua_State *L) {
 
 static int
 lpackint32(lua_State *L) {
-	int32_t sn = luaL_checkinteger(L, 1);
+	int32_t sn = (int32_t)luaL_checkinteger(L, 1);
 	uint32_t n = (uint32_t) sn;
 	uint8_t buf[4] = { 
 		(uint8_t)n&0xff , 
@@ -433,7 +444,7 @@ lpackframetag(lua_State *L) {
 
 static int
 lpicture_size(lua_State *L) {
-	int n = luaL_checkinteger(L,1);
+	int n = (int)luaL_checkinteger(L,1);
 	int sz = sizeof(struct pack_picture) + (n - 1) * sizeof(struct pack_quad);
 	lua_pushinteger(L, sz);
 	return 1;
@@ -441,8 +452,8 @@ lpicture_size(lua_State *L) {
 
 static int
 lpolygon_size(lua_State *L) {
-	int n = luaL_checkinteger(L,1);
-	int pn = luaL_checkinteger(L,2);
+	int n = (int)luaL_checkinteger(L,1);
+	int pn = (int)luaL_checkinteger(L,2);
 	int sz = sizeof(struct pack_polygon) 
 		+ (n-1) * sizeof(struct pack_poly)
 		+ 12 * pn;
@@ -452,8 +463,8 @@ lpolygon_size(lua_State *L) {
 
 static int
 lpack_size(lua_State *L) {
-	int max_id = luaL_checkinteger(L,1);
-	int tex = luaL_checkinteger(L,2);
+	int max_id = (int)luaL_checkinteger(L,1);
+	int tex = (int)luaL_checkinteger(L,2);
 	int align_n = (max_id + 1 + 3) & ~3;
 	int size = sizeof(struct sprite_pack) 
 		+ align_n * sizeof(uint8_t) 
@@ -474,9 +485,9 @@ lpack_size(lua_State *L) {
  */
 static int
 lanimation_size(lua_State *L) {
-	int frame = luaL_checkinteger(L,1);
-	int component = luaL_checkinteger(L,2);
-	int action = luaL_checkinteger(L,3);
+	int frame = (int)luaL_checkinteger(L,1);
+	int component = (int)luaL_checkinteger(L,2);
+	int action = (int)luaL_checkinteger(L,3);
 
 	int size = sizeof(struct pack_animation) 
 		+ frame * sizeof(struct pack_frame)
@@ -517,6 +528,12 @@ lstring_size(lua_State *L) {
 static int
 llabel_size(lua_State *L) {
 	lua_pushinteger(L, sizeof(struct pack_label));
+	return 1;
+}
+
+static int
+lpannel_size(lua_State *L) {
+	lua_pushinteger(L, sizeof(struct pack_pannel));
 	return 1;
 }
 
@@ -561,6 +578,7 @@ ejoy2d_spritepack(lua_State *L) {
 		{ "part_size", lpart_size },
 		{ "string_size" , lstring_size },
 		{ "label_size", llabel_size },
+		{ "pannel_size", lpannel_size },
 		{ "import", limport },
 		{ "dump", ldumppack },
 		{ NULL, NULL },
@@ -576,6 +594,8 @@ ejoy2d_spritepack(lua_State *L) {
 	lua_setfield(L, -2, "TYPE_POLYGON");
 	lua_pushinteger(L, TYPE_LABEL);
 	lua_setfield(L, -2, "TYPE_LABEL");
+	lua_pushinteger(L, TYPE_PANNEL);
+	lua_setfield(L, -2, "TYPE_PANNEL");
 
 	return 1;
 }

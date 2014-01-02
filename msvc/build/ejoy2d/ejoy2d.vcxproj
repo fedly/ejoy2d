@@ -22,6 +22,7 @@
     <ClCompile Include="..\..\..\lib\matrix.c" />
     <ClCompile Include="..\..\..\lib\particle.c" />
     <ClCompile Include="..\..\..\lib\ppm.c" />
+    <ClCompile Include="..\..\..\lib\scissor.c" />
     <ClCompile Include="..\..\..\lib\screen.c" />
     <ClCompile Include="..\..\..\lib\shader.c" />
     <ClCompile Include="..\..\..\lib\sprite.c" />
@@ -42,6 +43,7 @@
     <ClInclude Include="..\..\..\lib\opengl.h" />
     <ClInclude Include="..\..\..\lib\particle.h" />
     <ClInclude Include="..\..\..\lib\ppm.h" />
+    <ClInclude Include="..\..\..\lib\scissor.h" />
     <ClInclude Include="..\..\..\lib\screen.h" />
     <ClInclude Include="..\..\..\lib\shader.h" />
     <ClInclude Include="..\..\..\lib\sprite.h" />

@@ -1,0 +1,15 @@
+*.bsc
+*.exp
+*.ilk
+*.lastbuildstate
+*.pdb
+*.pyc
+*.suo
+*.user
+*.sdf
+*.opensdf
+*.ipch
+*.sln.cache
+Thumbs.db
+ej2d.exe
+msvc/

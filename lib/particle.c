@@ -243,6 +243,14 @@ init_with_particles(struct particle_system *ps, int numberOfParticles) {
 }
 
 void
+particle_system_reset(struct particle_system *ps) {
+	ps->isActive = true;
+	ps->emitCounter = 0.0;
+	ps->particleCount = 0;
+	ps->elapsed = 0.0;
+}
+
+void
 calc_particle_system_mat(struct particle * p, struct matrix *m) {
 	matrix_identity(m);
 	struct srt srt;
@@ -291,5 +299,7 @@ particle_system_update(struct particle_system *ps, float dt) {
 			_remove_particle(ps, i);
 		}
 	}
+
+	ps->isAlive = ps->particleCount > 0;
 }
 

@@ -1,2 +1,13 @@
 lib/
 obj/
+*.bsc
+*.exp
+*.ilk
+*.lastbuildstate
+*.pdb
+*.suo
+*.user
+*.sdf
+*.opensdf
+*.ipch
+*.sln.cache

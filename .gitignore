@@ -2,6 +2,8 @@ ios/example/example.xcodeproj/project.xcworkspace/
 ios/example/example.xcodeproj/xcuserdata/
 ej2d
 ej2d.dSYM/*
-ej2d.exe
-ej2d.pdb
-ej2d.ilk
+*.exe
+*.lib
+*.dll
+*.pdb
+*.ilk

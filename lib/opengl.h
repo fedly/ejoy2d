@@ -6,6 +6,11 @@
 #define OPENGLES 2
 #include <OpenGLES/ES2/gl.h>
 
+#elif defined(_MSC_VER) && !defined(USE_GLEW)
+
+#define OPENGLES 2
+#include <GLES2/gl2.h>
+
 #else
 
 #define OPENGLES 0

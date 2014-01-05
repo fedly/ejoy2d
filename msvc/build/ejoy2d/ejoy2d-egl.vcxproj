@@ -28,9 +28,10 @@
     <ClCompile Include="..\..\..\lib\sprite.c" />
     <ClCompile Include="..\..\..\lib\spritepack.c" />
     <ClCompile Include="..\..\..\lib\texture.c" />
-    <ClCompile Include="..\..\..\mingw\window.c" />
-    <ClCompile Include="..\..\..\mingw\winfont.c" />
-    <ClCompile Include="..\..\..\mingw\winfw.c" />
+    <ClCompile Include="..\..\src\ejoy2d\egl_wrapper.c" />
+    <ClCompile Include="..\..\src\ejoy2d\window.c" />
+    <ClCompile Include="..\..\src\ejoy2d\winfont.c" />
+    <ClCompile Include="..\..\src\ejoy2d\winfw.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\lib\dfont.h" />
@@ -49,9 +50,9 @@
     <ClInclude Include="..\..\..\lib\sprite.h" />
     <ClInclude Include="..\..\..\lib\spritepack.h" />
     <ClInclude Include="..\..\..\lib\texture.h" />
-    <ClInclude Include="..\..\..\mingw\winfw.h" />
     <ClInclude Include="..\..\include\stdbool.h" />
     <ClInclude Include="..\..\include\typeof.h" />
+    <ClInclude Include="..\..\src\ejoy2d\winfw.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\include\dynarray.h" />
@@ -65,9 +66,9 @@
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{D3A9E9A6-062D-4C26-BF35-8F18ED840D8F}</ProjectGuid>
+    <ProjectGuid>{F83071F9-E5A4-4683-81DD-3E97C6F8A67A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>ejoy2d</RootNamespace>
+    <RootNamespace>ejoy2d-d3d</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -111,7 +112,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>GLEW_STATIC;WIN32;USE_GLEW;EJOY2D_OS=WINDOWS;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;WIN32;USE_GLEW;__SCITECH_SNAP__;EJOY2D_OS=WINDOWS;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)..\src\glew-1.10.0\include\;$(SolutionDir)..\src\lua-5.2.3\src\;$(SolutionDir)..\include\;$(SolutionDir)..\..\lib\</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <DisableSpecificWarnings>4996;4244;4018</DisableSpecificWarnings>
@@ -120,6 +121,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\lib\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -130,7 +132,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>GLEW_STATIC;WIN32;USE_GLEW;EJOY2D_OS=WINDOWS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;WIN32;USE_GLEW;__SCITECH_SNAP__;EJOY2D_OS=WINDOWS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)..\src\glew-1.10.0\include\;$(SolutionDir)..\src\lua-5.2.3\src\;$(SolutionDir)..\include\;$(SolutionDir)..\..\lib\</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <DisableSpecificWarnings>4996;4244;4018</DisableSpecificWarnings>
@@ -141,6 +143,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\lib\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

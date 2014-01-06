@@ -265,20 +265,8 @@ pfsort_copy(struct pfsort_t *pf, PIXELFORMATDESCRIPTOR **target, unsigned int ta
 	}
 }
 
-EGLDisplay EGLAPIENTRY 
-eglGetDisplay(EGLNativeDisplayType display_id) {
-	return (EGLDisplay)display_id;
-}
-
-EGLBoolean EGLAPIENTRY 
-eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor) {
-	if (major) { 
-		*major = 1; 
-	}
-	if (minor) {
-		*minor = 1;
-	}
-
+static void 
+eglInitializeExtensions(EGLDisplay dpy) {
 	if (dpy) {
 		wglGetExtensionsStringARB = (PFNWGLGETEXTENSIONSSTRINGARBPROC)wglGetProcAddress("wglGetExtensionsStringARB");
 		if (wglGetExtensionsStringARB) {
@@ -293,7 +281,21 @@ eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor) {
 			}
 		}
 	}
+}
 
+EGLDisplay EGLAPIENTRY 
+eglGetDisplay(EGLNativeDisplayType display_id) {
+	return (EGLDisplay)display_id;
+}
+
+EGLBoolean EGLAPIENTRY 
+eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor) {
+	if (major) { 
+		*major = 1; 
+	}
+	if (minor) {
+		*minor = 1;
+	}
 	return EGL_RETURN_SUCCESS(EGL_TRUE);
 }
 
@@ -659,6 +661,8 @@ eglCreateContext(EGLDisplay dpy, EGLConfig /*config*/, EGLContext share_context,
 		wglDeleteContext(hGLRC);
 		return EGL_RETURN_ERROR(EGL_BAD_CONTEXT, EGL_NO_SURFACE);
 	}
+	
+	eglInitializeExtensions(dpy);
 
 	if (share_context != EGL_NO_CONTEXT) {
 		wglShareLists((HGLRC)share_context, hGLRC);

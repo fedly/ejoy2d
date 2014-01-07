@@ -1,0 +1,16 @@
+LIBRARY	libEGL
+EXPORTS
+	eglGetError                     @1
+	eglGetDisplay                   @2
+	eglInitialize                   @3
+	eglTerminate                    @4
+	eglGetConfigs                   @6
+	eglChooseConfig                 @7
+	eglGetConfigAttrib              @8
+	eglCreateWindowSurface          @9
+	eglCreatePbufferSurface         @10
+	eglDestroySurface               @12
+	eglCreateContext                @23
+	eglDestroyContext               @24
+	eglMakeCurrent                  @25
+	eglSwapBuffers                  @32

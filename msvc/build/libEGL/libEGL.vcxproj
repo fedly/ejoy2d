@@ -11,76 +11,30 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\lib\dfont.c" />
-    <ClCompile Include="..\..\..\lib\ejoy2dgame.c" />
-    <ClCompile Include="..\..\..\lib\fault.c" />
-    <ClCompile Include="..\..\..\lib\label.c" />
-    <ClCompile Include="..\..\..\lib\lmatrix.c" />
-    <ClCompile Include="..\..\..\lib\lparticle.c" />
-    <ClCompile Include="..\..\..\lib\lshader.c" />
-    <ClCompile Include="..\..\..\lib\lsprite.c" />
-    <ClCompile Include="..\..\..\lib\matrix.c" />
-    <ClCompile Include="..\..\..\lib\particle.c" />
-    <ClCompile Include="..\..\..\lib\ppm.c" />
-    <ClCompile Include="..\..\..\lib\scissor.c" />
-    <ClCompile Include="..\..\..\lib\screen.c" />
-    <ClCompile Include="..\..\..\lib\shader.c" />
-    <ClCompile Include="..\..\..\lib\sprite.c" />
-    <ClCompile Include="..\..\..\lib\spritepack.c" />
-    <ClCompile Include="..\..\..\lib\texture.c" />
-    <ClCompile Include="..\..\src\ejoy2d\window.c" />
-    <ClCompile Include="..\..\src\ejoy2d\winfont.c" />
-    <ClCompile Include="..\..\src\ejoy2d\winfw.c" />
+    <ClCompile Include="..\..\src\libEGL\libEGL.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\lib\dfont.h" />
-    <ClInclude Include="..\..\..\lib\ejoy2dgame.h" />
-    <ClInclude Include="..\..\..\lib\fault.h" />
-    <ClInclude Include="..\..\..\lib\label.h" />
-    <ClInclude Include="..\..\..\lib\list.h" />
-    <ClInclude Include="..\..\..\lib\lmatrix.h" />
-    <ClInclude Include="..\..\..\lib\matrix.h" />
-    <ClInclude Include="..\..\..\lib\opengl.h" />
-    <ClInclude Include="..\..\..\lib\particle.h" />
-    <ClInclude Include="..\..\..\lib\ppm.h" />
-    <ClInclude Include="..\..\..\lib\scissor.h" />
-    <ClInclude Include="..\..\..\lib\screen.h" />
-    <ClInclude Include="..\..\..\lib\shader.h" />
-    <ClInclude Include="..\..\..\lib\sprite.h" />
-    <ClInclude Include="..\..\..\lib\spritepack.h" />
-    <ClInclude Include="..\..\..\lib\texture.h" />
-    <ClInclude Include="..\..\include\stdbool.h" />
-    <ClInclude Include="..\..\include\typeof.h" />
-    <ClInclude Include="..\..\src\ejoy2d\winfw.h" />
+    <None Include="..\..\src\libEGL\libEGL.def" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\include\dynarray.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\libEGL\libEGL.vcxproj">
-      <Project>{a32cb0f9-ade4-400c-bbea-08367482f9af}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\libGLESv2\libGLESv2.vcxproj">
       <Project>{5341f6f7-d1ad-4113-9889-fb8e3e3fc845}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lua\lua.vcxproj">
-      <Project>{029e13fb-276a-4b6f-8346-00f3072734e7}</Project>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F83071F9-E5A4-4683-81DD-3E97C6F8A67A}</ProjectGuid>
+    <ProjectGuid>{A32CB0F9-ADE4-400C-BBEA-08367482F9AF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>ejoy2d-d3d</RootNamespace>
+    <RootNamespace>libEGL</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v100</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v100</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -99,28 +53,22 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
     <OutDir>$(EJOY2D)\..\</OutDir>
-    <TargetName>ej2d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
     <OutDir>$(EJOY2D)\..\</OutDir>
-    <TargetName>ej2d</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;EJOY2D_OS=WINDOWS;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <CompileAs>CompileAsCpp</CompileAs>
-      <DisableSpecificWarnings>4996;4244;4018</DisableSpecificWarnings>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(EJOY2D_LIB)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>$(EJOY2D)\src\libEGL\libEGL.def</ModuleDefinitionFile>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -131,16 +79,14 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;EJOY2D_OS=WINDOWS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <CompileAs>CompileAsCpp</CompileAs>
-      <DisableSpecificWarnings>4996;4244;4018</DisableSpecificWarnings>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(EJOY2D_LIB)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>$(EJOY2D)\src\libEGL\libEGL.def</ModuleDefinitionFile>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

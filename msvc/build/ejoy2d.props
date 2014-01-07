@@ -11,7 +11,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(EJOY2D)\src\glew-1.10.0\include\;$(EJOY2D)\src\lua-5.2.3\src\;$(EJOY2D)\include\;$(EJOY2D)\..\lib\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(EJOY2D)\src\lua-5.2.3\src\;$(EJOY2D)\include\;$(EJOY2D)\..\lib\</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link />

@@ -113,6 +113,7 @@
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;USE_GLEW;EJOY2D_OS=WINDOWS;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
       <DisableSpecificWarnings>4996;4244;4018</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>$(EJOY2D)\src\glew-1.10.0\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -131,6 +132,7 @@
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;USE_GLEW;EJOY2D_OS=WINDOWS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
       <DisableSpecificWarnings>4996;4244;4018</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>$(EJOY2D)\src\glew-1.10.0\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

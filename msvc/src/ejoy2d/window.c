@@ -1,8 +1,4 @@
 #include <windows.h>
-
-#if defined(_MSC_VER) && defined(USE_GLEW)
-#include <GL/glew.h>
-#endif
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include <GLES2/gl2.h>
@@ -77,12 +73,6 @@ init_window(HWND hWnd, ESContext* cnt)
 	if (context == EGL_NO_CONTEXT) {
 		return false;
 	}
-
-#if defined(_MSC_VER) && defined(USE_GLEW)
-	if (glewInit() != GLEW_OK) {
-		return false;
-	}
-#endif
 
 	if (!eglMakeCurrent(display, surface, surface, context)) {
 		return false;

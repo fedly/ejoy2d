@@ -1,9 +1,11 @@
+#define EGLAPI extern "C"
 #include <EGL/egl.h>
 
 #include <Windows.h>
 #include <assert.h>
 #include <malloc.h>
 #include <stdlib.h>
+#include "../libGLESv2/Context.h"
 
 static PIXELFORMATDESCRIPTOR* pixelformats_array = NULL;
 static EGLint pixelformats_count = 0;
@@ -14,7 +16,7 @@ static EGLint current_error = EGL_SUCCESS;
 #define GLAPIENTRYP _stdcall *
 
 #ifndef PROC
-	typedef int (WINAPI *PROC)();
+typedef int (WINAPI *PROC)();
 #endif		
 
 DECLARE_HANDLE(HPBUFFERARB);
@@ -61,11 +63,11 @@ typedef HPBUFFERARB GL_Surface;
 #define WGL_BACK_LEFT_ARB              0x2085
 #define WGL_BACK_RIGHT_ARB             0x2086
 
-typedef const char *( GLAPIENTRYP PFNWGLGETEXTENSIONSSTRINGARBPROC )( HDC hdc );
-typedef BOOL( GLAPIENTRYP PFNWGLCHOOSEPIXELFORMATARBPROC )( HDC hdc, const int *piAttribIList, const FLOAT *pfAttribFList, UINT nMaxFormats, int *piFormats, UINT *nNumFormats );
-typedef HPBUFFERARB( GLAPIENTRYP PFNWGLCREATEPBUFFERARBPROC )( HDC hDC, int iPixelFormat, int iWidth, int iHeight, const int *piAttribList );
-typedef HDC( GLAPIENTRYP PFNWGLGETPBUFFERDCARBPROC )( HPBUFFERARB hPbuffer );
-typedef BOOL( GLAPIENTRYP PFNWGLQUERYPBUFFERARBPROC )( HPBUFFERARB hPbuffer, int iAttribute, int *piValue );
+typedef const char *(GLAPIENTRYP PFNWGLGETEXTENSIONSSTRINGARBPROC)(HDC hdc);
+typedef BOOL(GLAPIENTRYP PFNWGLCHOOSEPIXELFORMATARBPROC)(HDC hdc, const int *piAttribIList, const FLOAT *pfAttribFList, UINT nMaxFormats, int *piFormats, UINT *nNumFormats);
+typedef HPBUFFERARB(GLAPIENTRYP PFNWGLCREATEPBUFFERARBPROC)(HDC hDC, int iPixelFormat, int iWidth, int iHeight, const int *piAttribList);
+typedef HDC(GLAPIENTRYP PFNWGLGETPBUFFERDCARBPROC)(HPBUFFERARB hPbuffer);
+typedef BOOL(GLAPIENTRYP PFNWGLQUERYPBUFFERARBPROC)(HPBUFFERARB hPbuffer, int iAttribute, int *piValue);
 
 PFNWGLGETEXTENSIONSSTRINGARBPROC wglGetExtensionsStringARB = 0x0;
 PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = 0x0;
@@ -86,7 +88,7 @@ get_current_error() {
 #define EGL_RETURN_ERROR(ec, ret) (set_current_error(ec), (ret))
 #define EGL_RETURN_SUCCESS(ret) (set_current_error(EGL_SUCCESS), (ret))
 
-static bool 
+static bool
 get_extension(const char* name, const char* extensions) {
 	const char *pos = 0;
 	while ((pos = strstr(extensions, name)) != 0) {
@@ -184,9 +186,9 @@ pfsort_compare(void* arg, const void *lft, const void *rht) {
 #else
 pfsort_compare(const void *lft, const void *rht, void* arg) {
 #endif
-	struct pfsort_t *pf       = (struct pfsort_t *)arg;
-	PIXELFORMATDESCRIPTOR* l  = *(PIXELFORMATDESCRIPTOR**)lft;
-	PIXELFORMATDESCRIPTOR* r  = *(PIXELFORMATDESCRIPTOR**)rht;
+	struct pfsort_t *pf = (struct pfsort_t *)arg;
+	PIXELFORMATDESCRIPTOR* l = *(PIXELFORMATDESCRIPTOR**)lft;
+	PIXELFORMATDESCRIPTOR* r = *(PIXELFORMATDESCRIPTOR**)rht;
 
 #define EGL_SORT(l, r) if ((l) != (r)) { return ((l) < (r))? 1: -1; }
 
@@ -225,16 +227,16 @@ static void
 pfsort_sort(struct pfsort_t *pf, const EGLint *attrib_list) {
 	assert(pf && pf->array && attrib_list);
 
-	pf->want_red   = 0;
+	pf->want_red = 0;
 	pf->want_green = 0;
-	pf->want_blue  = 0;
+	pf->want_blue = 0;
 	pf->want_alpha = 0;
 	for (const EGLint* attr = attrib_list; attr[0] != EGL_NONE; attr += 2) {
 		if (attr[1] != 0 && attr[1] != EGL_DONT_CARE) {
 			switch (attr[0]) {
-			case EGL_RED_SIZE:   pf->want_red   = 1; break;
+			case EGL_RED_SIZE:   pf->want_red = 1; break;
 			case EGL_GREEN_SIZE: pf->want_green = 1; break;
-			case EGL_BLUE_SIZE:  pf->want_blue  = 1; break;
+			case EGL_BLUE_SIZE:  pf->want_blue = 1; break;
 			case EGL_ALPHA_SIZE: pf->want_alpha = 1; break;
 			}
 		}
@@ -265,7 +267,7 @@ pfsort_copy(struct pfsort_t *pf, PIXELFORMATDESCRIPTOR **target, unsigned int ta
 	}
 }
 
-static void 
+static void
 eglInitializeExtensions(EGLDisplay dpy) {
 	if (dpy) {
 		wglGetExtensionsStringARB = (PFNWGLGETEXTENSIONSSTRINGARBPROC)wglGetProcAddress("wglGetExtensionsStringARB");
@@ -283,15 +285,15 @@ eglInitializeExtensions(EGLDisplay dpy) {
 	}
 }
 
-EGLDisplay EGLAPIENTRY 
+EGLDisplay EGLAPIENTRY
 eglGetDisplay(EGLNativeDisplayType display_id) {
 	return (EGLDisplay)display_id;
 }
 
-EGLBoolean EGLAPIENTRY 
+EGLBoolean EGLAPIENTRY
 eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor) {
-	if (major) { 
-		*major = 1; 
+	if (major) {
+		*major = 1;
 	}
 	if (minor) {
 		*minor = 1;
@@ -299,7 +301,7 @@ eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor) {
 	return EGL_RETURN_SUCCESS(EGL_TRUE);
 }
 
-EGLBoolean EGLAPIENTRY 
+EGLBoolean EGLAPIENTRY
 eglGetConfigs(EGLDisplay dpy, EGLConfig *configs, EGLint config_size, EGLint *num_config) {
 	HDC  hdc = (HDC)dpy;
 	PIXELFORMATDESCRIPTOR pfd;
@@ -358,7 +360,7 @@ eglGetConfigs(EGLDisplay dpy, EGLConfig *configs, EGLint config_size, EGLint *nu
 	return EGL_RETURN_SUCCESS(EGL_TRUE);
 }
 
-EGLBoolean EGLAPIENTRY 
+EGLBoolean EGLAPIENTRY
 eglGetConfigAttrib(EGLDisplay /*dpy*/, EGLConfig config, EGLint attribute, EGLint *value) {
 	PIXELFORMATDESCRIPTOR* ppfd = (PIXELFORMATDESCRIPTOR*)config;
 
@@ -400,7 +402,7 @@ eglGetConfigAttrib(EGLDisplay /*dpy*/, EGLConfig config, EGLint attribute, EGLin
 		return EGL_RETURN_SUCCESS(EGL_TRUE);
 	case EGL_NATIVE_VISUAL_ID:
 		*value = ((PIXELFORMATDESCRIPTOR*)config) - pixelformats_array;
-		return (pixelformats_array && *value > 0) ? EGL_TRUE : EGL_FALSE;		
+		return (pixelformats_array && *value > 0) ? EGL_TRUE : EGL_FALSE;
 	case EGL_NATIVE_VISUAL_TYPE:
 		return EGL_FALSE;
 	case EGL_SAMPLE_BUFFERS:
@@ -425,7 +427,7 @@ eglGetConfigAttrib(EGLDisplay /*dpy*/, EGLConfig config, EGLint attribute, EGLin
 	return EGL_FALSE;
 }
 
-EGLBoolean EGLAPIENTRY 
+EGLBoolean EGLAPIENTRY
 eglChooseConfig(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *configs, EGLint config_size, EGLint *num_config) {
 	const EGLint def_attrib_list[] = { EGL_NONE };
 	struct pfsort_t *pf = NULL;
@@ -437,7 +439,7 @@ eglChooseConfig(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *configs, E
 	if (!pixelformats_array && !eglGetConfigs(dpy, 0, 0, &pixelformats_vaild_count)) {
 		return EGL_FALSE;
 	}
-	
+
 	if (!attrib_list) {
 		attrib_list = def_attrib_list;
 	}
@@ -488,16 +490,16 @@ eglChooseConfig(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *configs, E
 	return EGL_RETURN_SUCCESS(EGL_TRUE);
 }
 
-EGLSurface EGLAPIENTRY 
+EGLSurface EGLAPIENTRY
 eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config, EGLNativeWindowType /*win*/, const EGLint * /*attrib_list*/) {
-	HDC  hdc = (HDC)dpy; 
+	HDC  hdc = (HDC)dpy;
 	PIXELFORMATDESCRIPTOR *ppfd = (PIXELFORMATDESCRIPTOR *)config;
 	int pixelFormat = 0;
 
 	if (!hdc) {
 		return EGL_RETURN_ERROR(EGL_BAD_DISPLAY, EGL_NO_SURFACE);
 	}
-	
+
 	if (!ppfd) {
 		return EGL_RETURN_ERROR(EGL_BAD_CONFIG, EGL_NO_SURFACE);
 	}
@@ -513,12 +515,12 @@ eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config, EGLNativeWindowType /*w
 	return EGL_RETURN_SUCCESS((EGLSurface)hdc);
 }
 
-EGLContext EGLAPIENTRY 
+EGLContext EGLAPIENTRY
 eglGetCurrentContext() {
 	return (EGLContext)wglGetCurrentContext();
 }
 
-EGLBoolean EGLAPIENTRY 
+EGLBoolean EGLAPIENTRY
 eglMakeCurrent(EGLDisplay dpy, EGLSurface /*draw*/, EGLSurface /*read*/, EGLContext ctx) {
 	if (wglMakeCurrent((HDC)dpy, (HGLRC)ctx)) {
 		return EGL_RETURN_SUCCESS(EGL_TRUE);
@@ -526,7 +528,7 @@ eglMakeCurrent(EGLDisplay dpy, EGLSurface /*draw*/, EGLSurface /*read*/, EGLCont
 	return EGL_RETURN_ERROR(EGL_BAD_CONTEXT, EGL_FALSE);
 }
 
-EGLSurface EGLAPIENTRY 
+EGLSurface EGLAPIENTRY
 eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig /*config*/, const EGLint *attrib_list) {
 	HDC hdc = (HDC)dpy;
 
@@ -552,7 +554,6 @@ eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig /*config*/, const EGLint *attr
 	int pixelFormat;
 	unsigned int numFormats;
 	HPBUFFERARB hPBuffer = NULL;
-
 
 	if (attrib_list) {
 		while (attrib_list[0] != EGL_NONE) {
@@ -648,7 +649,7 @@ eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig /*config*/, const EGLint *attr
 	return EGL_RETURN_SUCCESS((EGLSurface)hdc);
 }
 
-EGLContext EGLAPIENTRY 
+EGLContext EGLAPIENTRY
 eglCreateContext(EGLDisplay dpy, EGLConfig /*config*/, EGLContext share_context, const EGLint * /*attrib_list*/) {
 	HDC hDC = (HDC)dpy;
 
@@ -661,7 +662,8 @@ eglCreateContext(EGLDisplay dpy, EGLConfig /*config*/, EGLContext share_context,
 		wglDeleteContext(hGLRC);
 		return EGL_RETURN_ERROR(EGL_BAD_CONTEXT, EGL_NO_SURFACE);
 	}
-	
+
+	glCreateContext();
 	eglInitializeExtensions(dpy);
 
 	if (share_context != EGL_NO_CONTEXT) {
@@ -671,22 +673,22 @@ eglCreateContext(EGLDisplay dpy, EGLConfig /*config*/, EGLContext share_context,
 	return EGL_RETURN_SUCCESS((EGLContext)hGLRC);
 }
 
-EGLBoolean EGLAPIENTRY 
+EGLBoolean EGLAPIENTRY
 eglSwapBuffers(EGLDisplay dpy, EGLSurface /*surface*/) {
 	return SwapBuffers((HDC)dpy) == TRUE ? EGL_TRUE : EGL_FALSE;
 }
 
-EGLBoolean EGLAPIENTRY 
+EGLBoolean EGLAPIENTRY
 eglDestroyContext(EGLDisplay /*dpy*/, EGLContext ctx) {
 	return wglDeleteContext((HGLRC)ctx) == TRUE ? EGL_TRUE : EGL_FALSE;
 }
 
-EGLBoolean EGLAPIENTRY 
+EGLBoolean EGLAPIENTRY
 eglDestroySurface(EGLDisplay /*dpy*/, EGLSurface /*surface*/) {
 	return EGL_TRUE;
 }
 
-EGLBoolean EGLAPIENTRY 
+EGLBoolean EGLAPIENTRY
 eglTerminate(EGLDisplay /*dpy*/) {
 	free(pixelformats_array);
 	pixelformats_array = NULL;
@@ -695,7 +697,7 @@ eglTerminate(EGLDisplay /*dpy*/) {
 	return EGL_TRUE;
 }
 
-EGLint EGLAPIENTRY 
+EGLint EGLAPIENTRY
 eglGetError(void) {
 	EGLint error = get_current_error();
 	if (error != EGL_SUCCESS) {

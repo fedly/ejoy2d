@@ -115,7 +115,7 @@
       <PreprocessorDefinitions>WIN32;EJOY2D_OS=WINDOWS;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
       <DisableSpecificWarnings>4996;4244;4018</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>$(EJOY2D_LUA);$(EJOY2D)\include\;$(EJOY2D)\..\lib\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(EJOY2D_LUA);$(EJOY2D)\include\;$(EJOY2D_ROOT)\lib\;$(EJOY2D_ROOT)\mingw\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -135,7 +135,7 @@
       <PreprocessorDefinitions>WIN32;EJOY2D_OS=WINDOWS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
       <DisableSpecificWarnings>4996;4244;4018</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>$(EJOY2D_LUA);$(EJOY2D)\include\;$(EJOY2D)\..\lib\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(EJOY2D_LUA);$(EJOY2D)\include\;$(EJOY2D_ROOT)\lib\;$(EJOY2D_ROOT)\mingw\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

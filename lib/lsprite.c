@@ -17,6 +17,7 @@ static struct sprite *
 newlabel(lua_State *L, struct pack_label *label) {
 	int sz = sizeof(struct sprite) + sizeof(struct pack_label);
 	struct sprite *s = (struct sprite *)lua_newuserdata(L, sz);
+	s->parent = NULL;
 	// label never has a child
 	struct pack_label * pl = (struct pack_label *)(s+1);
 	*pl = *label;
@@ -87,6 +88,24 @@ static const char * srt_key[] = {
 	"scale",
 };
 
+
+static void
+update_message(struct sprite * s, struct sprite_pack * pack, int parentid, int componentid, int frame) {
+  struct pack_animation * ani = (struct pack_animation *)pack->data[parentid];
+  if (frame < 0 || frame >= ani->frame_number) {
+    return;
+  }
+  struct pack_frame pframe = ani->frame[frame];
+  int i = 0;
+  for (; i < pframe.n; i++) {
+    if (pframe.part[i].component_id == componentid && pframe.part[i].touchable) {
+    	s->message = true;
+    	return;
+    }
+  }
+}
+
+
 static struct sprite *
 newsprite(lua_State *L, struct sprite_pack *pack, int id) {
 	int sz = sprite_size(pack, id);
@@ -97,17 +116,18 @@ newsprite(lua_State *L, struct sprite_pack *pack, int id) {
 	sprite_init(s, pack, id, sz);
 	int i;
 	for (i=0;;i++) {
-		int id = sprite_component(s, i);
-		if (id < 0)
+		int childid = sprite_component(s, i);
+		if (childid < 0)
 			break;
 		if (i==0) {
 			lua_newtable(L);
 			lua_pushvalue(L,-1);
 			lua_setuservalue(L, -3);	// set uservalue for sprite
 		}
-		struct sprite *c = newsprite(L, pack, id);
+		struct sprite *c = newsprite(L, pack, childid);
 		c->name = sprite_childname(s, i);
 		sprite_mount(s, i, c);
+		update_message(c, pack, id, i, s->frame);
 		if (c) {
 			lua_rawseti(L, -2, i+1);
 		}
@@ -377,6 +397,9 @@ lmount(lua_State *L) {
 		lua_pushnil(L);
 		lua_rawseti(L, -2, index+1);
 	} else {
+		if (child->parent) {
+			return luaL_error(L, "Can't mount sprite %p twice", child);
+		}
 		sprite_mount(s, index, child);
 		lua_pushvalue(L, 3);
 		lua_rawseti(L, -2, index+1);
@@ -452,28 +475,40 @@ lmulti_draw(lua_State *L) {
 	return 0;
 }
 
-static int
-lookup(lua_State *L, struct sprite *root, struct sprite *spr) {
-	lua_checkstack(L,2);
+static struct sprite *
+lookup(lua_State *L, struct sprite * spr) {
 	int i;
+	struct sprite * root = lua_touserdata(L, -1);
 	lua_getuservalue(L,-1);
 	for (i=0;sprite_component(root, i)>=0;i++) {
 		struct sprite * child = root->data.children[i];
-		if (child && child->name) {
+		if (child) {
 			lua_rawgeti(L, -1, i+1);
 			if (child == spr) {
-				return 1;
+				lua_replace(L,-2);
+				return child;
 			} else {
-				if (lookup(L, child , spr))
-					return 1;
-				else {
-					lua_pop(L,1);
-				}
+				lua_pop(L,1);
 			}
 		}
 	}
 	lua_pop(L,1);
-	return 0;
+	return NULL;
+}
+
+static int
+unwind(lua_State *L, struct sprite *root, struct sprite *spr) {
+	int n = 0;
+	while (spr) {
+		if (spr == root) {
+			return n;
+		}
+		++n;
+		lua_checkstack(L,3);
+		lua_pushlightuserdata(L, spr);
+		spr = spr->parent;
+	}
+	return -1;
 }
 
 static int
@@ -494,8 +529,19 @@ ltest(lua_State *L) {
 		return 1;
 	}
 	lua_settop(L,1);
-	if (!lookup(L, s, m)) {
-		return luaL_error(L, "find an invlid sprite");
+	int depth = unwind(L, s , m);
+	if (depth < 0) {
+		return luaL_error(L, "Unwind an invalid sprite");
+	}
+	int i;
+	lua_pushvalue(L,1);
+	for (i=depth+1;i>1;i--) {
+		struct sprite * tmp = lua_touserdata(L, i);
+		tmp = lookup(L, tmp);
+		if (tmp == NULL) {
+			return luaL_error(L, "find an invalid sprite");
+		}
+		lua_replace(L, -2);
 	}
 
 	return 1;

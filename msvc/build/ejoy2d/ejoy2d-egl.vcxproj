@@ -31,6 +31,7 @@
     <ClCompile Include="..\..\src\ejoy2d\window.c" />
     <ClCompile Include="..\..\src\ejoy2d\winfont.c" />
     <ClCompile Include="..\..\src\ejoy2d\winfw.c" />
+    <ClCompile Include="..\..\src\ejoy2d\winmain.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\lib\dfont.h" />
@@ -101,12 +102,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(EJOY2D)\..\</OutDir>
-    <TargetName>ej2d</TargetName>
+    <TargetName>ej2d-egl</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(EJOY2D)\..\</OutDir>
-    <TargetName>ej2d</TargetName>
+    <TargetName>ej2d-egl</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

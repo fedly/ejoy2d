@@ -80,6 +80,9 @@
     <ClCompile Include="..\..\..\lib\scissor.c">
       <Filter>lib\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\ejoy2d\winmain.c">
+      <Filter>mingw</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\stdbool.h">

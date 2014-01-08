@@ -31,6 +31,7 @@
     <ClCompile Include="..\..\..\mingw\window.c" />
     <ClCompile Include="..\..\..\mingw\winfont.c" />
     <ClCompile Include="..\..\..\mingw\winfw.c" />
+    <ClCompile Include="..\..\src\ejoy2d\winmain.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\lib\dfont.h" />

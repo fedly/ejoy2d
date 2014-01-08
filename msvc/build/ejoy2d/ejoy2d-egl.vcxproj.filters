@@ -74,13 +74,13 @@
     <ClCompile Include="..\..\src\ejoy2d\window.c">
       <Filter>msvc</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\ejoy2d\winfont.c">
-      <Filter>msvc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ejoy2d\winfw.c">
-      <Filter>msvc</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\ejoy2d\winmain.c">
+      <Filter>msvc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\mingw\winfont.c">
+      <Filter>msvc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\mingw\winfw.c">
       <Filter>msvc</Filter>
     </ClCompile>
   </ItemGroup>
@@ -139,7 +139,7 @@
     <ClInclude Include="..\..\..\lib\scissor.h">
       <Filter>lib\inc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\ejoy2d\winfw.h">
+    <ClInclude Include="..\..\..\mingw\winfw.h">
       <Filter>msvc</Filter>
     </ClInclude>
   </ItemGroup>

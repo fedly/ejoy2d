@@ -28,9 +28,9 @@
     <ClCompile Include="..\..\..\lib\sprite.c" />
     <ClCompile Include="..\..\..\lib\spritepack.c" />
     <ClCompile Include="..\..\..\lib\texture.c" />
+    <ClCompile Include="..\..\..\mingw\winfont.c" />
+    <ClCompile Include="..\..\..\mingw\winfw.c" />
     <ClCompile Include="..\..\src\ejoy2d\window.c" />
-    <ClCompile Include="..\..\src\ejoy2d\winfont.c" />
-    <ClCompile Include="..\..\src\ejoy2d\winfw.c" />
     <ClCompile Include="..\..\src\ejoy2d\winmain.c" />
   </ItemGroup>
   <ItemGroup>
@@ -50,9 +50,9 @@
     <ClInclude Include="..\..\..\lib\sprite.h" />
     <ClInclude Include="..\..\..\lib\spritepack.h" />
     <ClInclude Include="..\..\..\lib\texture.h" />
+    <ClInclude Include="..\..\..\mingw\winfw.h" />
     <ClInclude Include="..\..\include\stdbool.h" />
     <ClInclude Include="..\..\include\typeof.h" />
-    <ClInclude Include="..\..\src\ejoy2d\winfw.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\include\dynarray.h" />

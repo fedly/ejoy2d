@@ -3,8 +3,5 @@ ios/example/example.xcodeproj/xcuserdata/
 ej2d
 ej2d.dSYM/*
 *.exe
-*.exp
-*.lib
 *.dll
-*.pdb
 *.ilk

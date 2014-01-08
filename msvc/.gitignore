@@ -6,7 +6,6 @@ obj/
 *.lastbuildstate
 *.pdb
 *.suo
-*.user
 *.sdf
 *.opensdf
 *.ipch

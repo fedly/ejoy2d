@@ -3,6 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
     <EJOY2D>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), ejoy2d.root))</EJOY2D>
+    <EJOY2D_ROOT>$(EJOY2D)\..\</EJOY2D_ROOT>
     <EJOY2D_OBJ>$(EJOY2D)\obj\$(Configuration)\$(ProjectName)\</EJOY2D_OBJ>
     <EJOY2D_LIB>$(EJOY2D)\lib\$(Configuration)\</EJOY2D_LIB>
     <EJOY2D_LUA>$(EJOY2D)\src\lua-5.2.3\src\</EJOY2D_LUA>
@@ -10,6 +11,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <IntDir>$(EJOY2D_OBJ)</IntDir>
+    <OutDir>$(EJOY2D_LIB)</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -28,6 +30,9 @@
   <ItemGroup>
     <BuildMacro Include="EJOY2D">
       <Value>$(EJOY2D)</Value>
+    </BuildMacro>
+    <BuildMacro Include="EJOY2D_ROOT">
+      <Value>$(EJOY2D_ROOT)</Value>
     </BuildMacro>
     <BuildMacro Include="EJOY2D_OBJ">
       <Value>$(EJOY2D_OBJ)</Value>

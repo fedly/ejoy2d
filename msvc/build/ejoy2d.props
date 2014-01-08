@@ -5,13 +5,14 @@
     <EJOY2D>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), ejoy2d.root))</EJOY2D>
     <EJOY2D_OBJ>$(EJOY2D)\obj\$(Configuration)\$(ProjectName)\</EJOY2D_OBJ>
     <EJOY2D_LIB>$(EJOY2D)\lib\$(Configuration)\</EJOY2D_LIB>
+    <EJOY2D_LUA>$(EJOY2D)\src\lua-5.2.3\src\</EJOY2D_LUA>
+    <EJOY2D_GLEW>$(EJOY2D)\src\glew\</EJOY2D_GLEW>
   </PropertyGroup>
   <PropertyGroup>
     <IntDir>$(EJOY2D_OBJ)</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(EJOY2D)\src\lua-5.2.3\src\;$(EJOY2D)\include\;$(EJOY2D)\..\lib\</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link />
@@ -33,6 +34,12 @@
     </BuildMacro>
     <BuildMacro Include="EJOY2D_LIB">
       <Value>$(EJOY2D_LIB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="EJOY2D_LUA">
+      <Value>$(EJOY2D_LUA)</Value>
+    </BuildMacro>
+    <BuildMacro Include="EJOY2D_GLEW">
+      <Value>$(EJOY2D_GLEW)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>

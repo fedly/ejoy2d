@@ -257,7 +257,7 @@ pfsort_copy(struct pfsort_t *pf, PIXELFORMATDESCRIPTOR **target, unsigned int ta
 		return 0;
 	}
 
-	if (pf->current > target_size) {
+	if (pf->current > (EGLint)target_size) {
 		memcpy(target, pf->array, target_size * sizeof(PIXELFORMATDESCRIPTOR *));
 		return target_size;
 	}

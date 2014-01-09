@@ -19,8 +19,7 @@ struct ESContext {
 static ESContext cnt = { 0 };
 
 static bool 
-init_window(HWND hWnd, ESContext* cnt)
-{
+init_window(HWND hWnd, ESContext* cnt) {
 	EGLint numConfigs;
 	EGLint majorVersion;
 	EGLint minorVersion;
@@ -88,19 +87,13 @@ init_window(HWND hWnd, ESContext* cnt)
 }
 
 static void
-update_frame(HDC hDC) {
-}
-
-static void
 get_xy(LPARAM lParam, int *x, int *y) {
 	*x = (short)(lParam & 0xffff); 
 	*y = (short)((lParam>>16) & 0xffff); 
 }
 
 LRESULT CALLBACK 
-WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-
+WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (message) {
 	case WM_CREATE:
 		SetTimer(hWnd,0,10,NULL);
@@ -144,8 +137,7 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 static void
-register_class()
-{
+register_class() {
 	WNDCLASSW wndclass;
 
 	wndclass.style = CS_HREDRAW | CS_VREDRAW;

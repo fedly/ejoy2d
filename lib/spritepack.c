@@ -422,8 +422,8 @@ lpackstring(lua_State *L) {
 		msvc::dynarray<uint8_t> buf(sz + 1);
 #endif
 		buf[0] = sz;
-		memcpy(buf + 1, str, sz);
-		lua_pushlstring(L, (char *)(uint8_t *)buf, sz + 1);
+		memcpy(buf+1, str, sz);
+		lua_pushlstring(L, (char *)buf, sz+1);
 	}
 	return 1;
 }

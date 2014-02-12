@@ -14,22 +14,19 @@ obj:ps(-100,0,0.5)
 
 local obj2 = ej.sprite("sample","mine")
 obj2.resource.frame = 70
-obj2.label.text = "Hello World"
 -- set position(100,0) scale(1.2) separately
 obj2:ps(100,0)
 obj2:ps(1.2)
 
 local game = {}
-
 local screencoord = { x = 512, y = 384, scale = 1.2 }
+local x1,y1,x2,y2 = obj2:aabb(screencoord)
+obj2.label.text = string.format("AABB\n%d x %d", x2-x1, y2-y1)
 
 function game.update()
 	turret.frame = turret.frame + 3
 	obj2.frame = obj2.frame + 1
 end
-
-local pos = {x = 300, y= 300, scale = 0.8}
-local pos2 = { x = 500, y = 300 }
 
 function game.drawframe()
 	obj:draw(screencoord)

@@ -189,7 +189,7 @@ static int
 lsetframe(lua_State *L) {
 	struct sprite * s = self(L);
 	int frame = (int)luaL_checkinteger(L,2);
-	sprite_setframe(s, frame);
+	sprite_setframe(s, frame, false);
 	return 0;
 }
 
@@ -464,6 +464,21 @@ ldraw(lua_State *L) {
 }
 
 static int
+laabb(lua_State *L) {
+	struct sprite *s = self(L);
+	struct srt srt;
+	fill_srt(L,&srt,2);
+	int aabb[4];
+	sprite_aabb(s, &srt, aabb);
+	int i;
+	for (i=0;i<4;i++) {
+		lua_pushinteger(L, aabb[i]);
+	}
+	return 4;
+}
+
+
+static int
 lmulti_draw(lua_State *L) {
 	struct sprite *s = self(L);
 	int cnt = (int)luaL_checkinteger(L,3);
@@ -535,9 +550,9 @@ static int
 ltest(lua_State *L) {
 	struct sprite *s = self(L);
 	struct srt srt;
-	fill_srt(L,&srt,2);
-	float x = luaL_checknumber(L, 3);
-	float y = luaL_checknumber(L, 4);
+	fill_srt(L,&srt,4);
+	float x = luaL_checknumber(L, 2);
+	float y = luaL_checknumber(L, 3);
 	struct sprite * m = sprite_test(s, &srt, x*SCREEN_SCALE, y*SCREEN_SCALE);
 	if (m == NULL)
 		return 0;
@@ -609,6 +624,44 @@ lps(lua_State *L) {
 	return 0;
 }
 
+static int
+lsr(lua_State *L) {
+	struct sprite *s = self(L);
+	struct matrix *m = &s->mat;
+	if (s->t.mat == NULL) {
+		matrix_identity(m);
+		s->t.mat = m;
+	}
+	int sx=1024,sy=1024,r=0;
+	int n = lua_gettop(L);
+	switch (n) {
+	case 4:
+		// sx,sy,rot
+		r = luaL_checknumber(L,4) * (1024.0 / 360.0);
+		// go through
+	case 3:
+		// sx, sy
+		sx = luaL_checknumber(L,2) * 1024;
+		sy = luaL_checknumber(L,3) * 1024;
+		break;
+	case 2:
+		// rot
+		r = luaL_checknumber(L,2) * (1024.0 / 360.0);
+		break;
+	}
+	matrix_sr(m, sx, sy, r);
+
+	return 0;
+}
+
+static int
+lrecursion_frame(lua_State *L) {
+	struct sprite * s = self(L);
+	int frame = (int)luaL_checkinteger(L,2);
+	sprite_setframe(s, frame, true);
+	return 0;
+}
+
 static void
 lmethod(lua_State *L) {
 	luaL_Reg l[] = {
@@ -625,9 +678,12 @@ lmethod(lua_State *L) {
 	}
 	luaL_Reg l2[] = {
 		{ "ps", lps },
+		{ "sr", lsr },
 		{ "draw", ldraw },
+		{ "recursion_frame", lrecursion_frame },
 		{ "multi_draw", lmulti_draw },
 		{ "test", ltest },
+		{ "aabb", laabb },
 		{ NULL, NULL, },
 	};
 	luaL_setfuncs(L,l2,nk);

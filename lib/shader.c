@@ -12,7 +12,7 @@
 #endif
 
 #define MAX_COMMBINE 64
-#define MAX_PROGRAM 3
+#define MAX_PROGRAM 6
 
 #define ATTRIB_VERTEX 0
 #define ATTRIB_TEXTCOORD 1
@@ -299,6 +299,7 @@ void
 shader_defaultblend() {
 	if (RS->blendchange) {
 		rs_commit();
+		RS->blendchange = 0;
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 	}
 }

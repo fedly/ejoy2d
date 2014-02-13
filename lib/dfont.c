@@ -57,8 +57,8 @@ hash(int c, int font) {
 
 struct dfont *
 dfont_create(int width, int height) {
-	int max_line = height / TINY_FONT;
-	int max_char = max_line * width / TINY_FONT;
+	int max_line = height / TINY_FONT;          // 字体最大行数
+	int max_char = max_line * width / TINY_FONT;// 最大字符个数 
 	size_t ssize = max_char * sizeof(struct hash_rect);
 	size_t lsize = max_line * sizeof(struct font_line);
 	struct dfont *df = (struct dfont *)malloc(sizeof(struct dfont) + ssize + lsize);

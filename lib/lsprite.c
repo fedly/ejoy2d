@@ -91,23 +91,45 @@ static const char * srt_key[] = {
 
 static void
 update_message(struct sprite * s, struct sprite_pack * pack, int parentid, int componentid, int frame) {
-  struct pack_animation * ani = (struct pack_animation *)pack->data[parentid];
-  if (frame < 0 || frame >= ani->frame_number) {
-    return;
-  }
-  struct pack_frame pframe = ani->frame[frame];
-  int i = 0;
-  for (; i < pframe.n; i++) {
-    if (pframe.part[i].component_id == componentid && pframe.part[i].touchable) {
-    	s->message = true;
-    	return;
-    }
-  }
+	struct pack_animation * ani = (struct pack_animation *)pack->data[parentid];
+	if (frame < 0 || frame >= ani->frame_number) {
+		return;
+	}
+	struct pack_frame pframe = ani->frame[frame];
+	int i = 0;
+	for (; i < pframe.n; i++) {
+		if (pframe.part[i].component_id == componentid && pframe.part[i].touchable) {
+			s->message = true;
+			return;
+		}
+	}
 }
 
+static struct sprite *
+newanchor(lua_State *L) {
+	int sz = sizeof(struct sprite) + sizeof(struct matrix);
+	struct sprite * s = (struct sprite *)lua_newuserdata(L, sz);
+	s->parent = NULL;
+	s->t.mat = NULL;
+	s->t.color = 0xffffffff;
+	s->t.additive = 0;
+	s->t.program = PROGRAM_DEFAULT;
+	s->message = false;
+	s->visible = false;	// anchor is invisible by default
+	s->name = NULL;
+	s->id = ANCHOR_ID;
+	s->type = TYPE_ANCHOR;
+	s->s.mat = (struct matrix *)(s+1);
+	matrix_identity(s->s.mat);
+
+	return s;
+}
 
 static struct sprite *
 newsprite(lua_State *L, struct sprite_pack *pack, int id) {
+	if (id == ANCHOR_ID) {
+		return newanchor(L);
+	}
 	int sz = sprite_size(pack, id);
 	if (sz == 0) {
 		return NULL;
@@ -179,8 +201,6 @@ self(lua_State *L) {
 static int
 lgetframe(lua_State *L) {
 	struct sprite * s = self(L);
-	if (s->frame == -1)
-		return 0;
 	lua_pushinteger(L, s->frame);
 	return 1;
 }
@@ -264,6 +284,16 @@ lgetmat(lua_State *L) {
 }
 
 static int
+lgetwmat(lua_State *L) {
+	struct sprite *s = self(L);
+	if (s->type == TYPE_ANCHOR) {
+		lua_pushlightuserdata(L, s->s.mat);
+		return 1;
+	}
+	return luaL_error(L, "Only anchor can get world matrix");
+}
+
+static int
 lsetprogram(lua_State *L) {
 	struct sprite *s = self(L);
 	if (lua_isnoneornil(L,2)) {
@@ -290,6 +320,15 @@ lgetname(lua_State *L) {
 	if (s->name == NULL)
 		return 0;
 	lua_pushstring(L, s->name);
+	return 1;
+}
+
+static int
+lgetparentname(lua_State *L) {
+	struct sprite *s = self(L);
+	if (s->parent == NULL)
+		return 0;
+	lua_pushstring(L, s->parent->name);
 	return 1;
 }
 
@@ -358,6 +397,8 @@ lgetter(lua_State *L) {
 		{"additive", lgetadditive },
 		{"message", lgetmessage },
 		{"matrix", lgetmat },
+		{"world_matrix", lgetwmat },
+		{"parent_name", lgetparentname },
 		{NULL, NULL},
 	};
 	luaL_newlib(L,l);
@@ -493,19 +534,26 @@ lmulti_draw(lua_State *L) {
 	struct srt srt;
 	fill_srt(L, &srt, 2);
 
+	if (s->t.mat == NULL) {
+		s->t.mat = &s->mat;
+		matrix_identity(&s->mat);
+	}
+	struct matrix *parent_mat = s->t.mat;
+	uint32_t parent_color = s->t.color;
+
 	int i;
 	for (i = 0; i < cnt; i++) {
 		lua_rawgeti(L, 4, i+1);
 		lua_rawgeti(L, 5, i+1);
-		struct matrix * mat = (struct matrix *)lua_touserdata(L, -2);
-		s->t.mat = mat;
+		s->t.mat = (struct matrix *)lua_touserdata(L, -2);
 		s->t.color = (uint32_t)lua_tounsigned(L, -1);
 		lua_pop(L, 2);
 
-		sprite_draw(s, &srt);
+		sprite_draw_as_child(s, &srt, parent_mat, parent_color);
 	}
 
-	s->t.mat = NULL;
+	s->t.mat = parent_mat;
+	s->t.color = parent_color;
 
 	return 0;
 }

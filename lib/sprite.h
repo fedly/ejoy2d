@@ -19,6 +19,7 @@ struct sprite {
 		struct pack_polygon *poly;
 		struct pack_label *label;
 		struct pack_pannel *pannel;
+		struct matrix *mat;
 	} s;
 	struct matrix mat;
 	int start_frame;
@@ -45,6 +46,7 @@ void sprite_init(struct sprite *, struct sprite_pack * pack, int id, int sz);
 int sprite_action(struct sprite *, const char * action);
 
 void sprite_draw(struct sprite *, struct srt *srt);
+void sprite_draw_as_child(struct sprite *, struct srt *srt, struct matrix *mat, uint32_t color);
 struct sprite * sprite_test(struct sprite *, struct srt *srt, int x, int y);
 
 // return child index, -1 means not found
